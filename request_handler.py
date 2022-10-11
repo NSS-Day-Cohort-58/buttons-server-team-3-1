@@ -1,6 +1,9 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_clowns, get_all_completions, get_all_requests
+from views import get_all_requests
+from views import create_request
+
 
 
 # Here's a class. It inherits from another class.
@@ -54,7 +57,16 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         content_len = int(self.headers.get("content-length", 0))
         post_body = self.rfile.read(content_len)
-        response = {"payload": post_body}
+
+        (resource, id) = self.parse_url(self.path)
+        
+        response = None
+
+        if resource == "requests":
+            response = create_request(post_body)
+
+        # Encode the new animal and send in response
+        
         self.wfile.write(json.dumps(response).encode())
 
     def _set_headers(self, status):
