@@ -1,5 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from views import get_all_requests
 
 from views.request_requests import create_request
 
