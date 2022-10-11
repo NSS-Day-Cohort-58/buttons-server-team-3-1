@@ -1,5 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from views import get_all_clowns, get_all_completions, get_all_requests
 
 
 # Here's a class. It inherits from another class.
@@ -9,33 +10,37 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 class HandleRequests(BaseHTTPRequestHandler):
     # This is a Docstring it should be at the beginning of all classes and functions
     # It gives a description of the class or function
-    """Controls the functionality of any GET, PUT, POST, DELETE requests to the server
-    """
+    """Controls the functionality of any GET, PUT, POST, DELETE requests to the server"""
 
     # Here's a class function
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any GET request.
     def do_GET(self):
-        """Handles GET requests to the server
-        """
-        # Set the response code to 'Ok'
-        self._set_headers(200)
-
-        # Your new console.log() that outputs to the terminal
-        print(self.path)
-
-        # It's an if..else statement
-        if self.path == "/clowns":
-            # In Python, this is a list of dictionaries
-            # In JavaScript, you would call it an array of objects
-            response = [
-                
-            ]
-
+        """Handles GET requests to the server"""
+        response = {}
+        (resource, id) = self.parse_url(self.path)
+        if resource == "clowns":
+            if id is not None:
+                response = get_single_clown(id)
+            else:
+                response = get_all_clowns()
+        if resource == "requests":
+            if id is not None:
+                response = get_single_request(id)
+            else:
+                response = get_all_requests()
+        if resource == "completions":
+            if id is not None:
+                response = get_single_completion(id)
+            else:
+                response = get_all_completions()
+        if response is not None:
+            # Set the response code to 'Ok'
+            self._set_headers(200)
         else:
-            response = []
-
+            self._set_headers(404)
+            response = {"message": f"{resource} {id} is currently unavailable"}
         # Send a JSON formatted string as a response
         self.wfile.write(json.dumps(response).encode())
 
@@ -47,12 +52,10 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Set response code to 'Created'
         self._set_headers(201)
 
-        content_len = int(self.headers.get('content-length', 0))
+        content_len = int(self.headers.get("content-length", 0))
         post_body = self.rfile.read(content_len)
-        response = { "payload": post_body }
+        response = {"payload": post_body}
         self.wfile.write(json.dumps(response).encode())
-
-
 
     def _set_headers(self, status):
         # Notice this Docstring also includes information about the arguments passed to the function
@@ -63,27 +66,27 @@ class HandleRequests(BaseHTTPRequestHandler):
             status (number): the status code to return to the front end
         """
         self.send_response(status)
-        self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Content-type", "application/json")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
 
     # Another method! This supports requests with the OPTIONS verb.
     def do_OPTIONS(self):
-        """Sets the options headers
-        """
+        """Sets the options headers"""
         self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept')
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+        self.send_header(
+            "Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept"
+        )
         self.end_headers()
 
 
 # This function is not inside the class. It is the starting
 # point of this application.
 def main():
-    """Starts the server on port 8088 using the HandleRequests class
-    """
-    host = ''
+    """Starts the server on port 8088 using the HandleRequests class"""
+    host = ""
     port = 8088
     HTTPServer((host, port), HandleRequests).serve_forever()
 
