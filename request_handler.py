@@ -1,6 +1,8 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from views.request_requests import create_request
+
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -49,10 +51,17 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
-        response = { "payload": post_body }
+
+        (resource, id) = self.parse_url(self.path)
+        
+        response = None
+
+        if resource == "requests":
+            response = create_request(post_body)
+
+        # Encode the new animal and send in response
+        
         self.wfile.write(json.dumps(response).encode())
-
-
 
     def _set_headers(self, status):
         # Notice this Docstring also includes information about the arguments passed to the function
