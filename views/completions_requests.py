@@ -38,3 +38,18 @@ def create_completion(completion):
 
     # Return the dictionary with `id` property added
     return completion
+
+
+def get_single_completion(id):
+    # Variable to hold the found completion, if it exists
+    requested_completion = None
+
+    # Iterate the COMPLETION list above. Very similar to the
+    # for..of loops you used in JavaScript.
+    for completion in COMPLETIONS:
+        # Dictionaries in Python use [] notation to find a key
+        # instead of the dot notation that JavaScript used.
+        if completion["id"] == id:
+            requested_completion = completion
+
+    return requested_completion
