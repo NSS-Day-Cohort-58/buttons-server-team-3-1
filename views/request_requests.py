@@ -47,3 +47,32 @@ def create_request(request):
     # Return the dictionary with `id` property added
     return request
 
+def delete_request(id):
+    # Initial -1 value for request index, in case one isn't found
+    request_index = -1
+
+    # Iterate the REQUESTS list, but use enumerate() so that you
+    # can access the index value of each item
+    for index, request in enumerate(REQUESTS):
+        if request["id"] == id:
+            # Found the request. Store the current index.
+            request_index = index
+
+    # If the request was found, use pop(int) to remove it from list
+    if request_index >= 0:
+        REQUESTS.pop(request_index)
+
+
+def get_single_request(id):
+    # Variable to hold the found request, if it exists
+    requested_request = None
+
+    # Iterate the REQUEST list above. Very similar to the
+    # for..of loops you used in JavaScript.
+    for request in REQUESTS:
+        # Dictionaries in Python use [] notation to find a key
+        # instead of the dot notation that JavaScript used.
+        if request["id"] == id:
+            requested_request = request
+
+    return requested_request
