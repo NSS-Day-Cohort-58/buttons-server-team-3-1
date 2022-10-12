@@ -47,7 +47,7 @@ def create_request(request):
     # Return the dictionary with `id` property added
     return request
 
-def delete_request():
+def delete_request(id):
     # Initial -1 value for request index, in case one isn't found
     request_index = -1
 
@@ -55,7 +55,7 @@ def delete_request():
     # can access the index value of each item
     for index, request in enumerate(REQUESTS):
         if request["id"] == id:
-            # Found the customer. Store the current index.
+            # Found the request. Store the current index.
             request_index = index
 
     # If the request was found, use pop(int) to remove it from list

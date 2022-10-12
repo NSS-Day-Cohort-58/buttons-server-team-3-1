@@ -65,7 +65,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "requests":
             response = create_request(post_body)
 
-        # Encode the new animal and send in response
+        # Encode the new request and send in response
         
         self.wfile.write(json.dumps(response).encode())
 
@@ -84,7 +84,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         if resource == "requests":
             delete_request(id)
 
-        # Encode the new animal and send in response
+        # Encode the new request and send in response
         self.wfile.write("".encode())
 
 
