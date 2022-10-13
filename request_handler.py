@@ -2,8 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_clowns, get_all_completions, get_all_requests
 from views import delete_request, get_single_clown
-from views import create_request, get_single_request, get_single_completion
-from views.completions_requests import create_completion
+from views import create_request, get_single_request, get_single_completion, create_completion
 
 
 
