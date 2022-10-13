@@ -2,7 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from views import get_all_clowns, get_all_completions, get_all_requests
 from views import delete_request, get_single_clown
-from views import create_request, get_single_request, get_single_completion
+from views import create_request, get_single_request, get_single_completion, create_completion
 
 
 
@@ -58,12 +58,19 @@ class HandleRequests(BaseHTTPRequestHandler):
         content_len = int(self.headers.get("content-length", 0))
         post_body = self.rfile.read(content_len)
 
+        post_body = json.loads(post_body)
+
         (resource, id) = self.parse_url(self.path)
         
         response = None
 
         if resource == "requests":
             response = create_request(post_body)
+
+        if resource == "completions":
+            response = create_completion(post_body)
+
+        
 
         # Encode the new request and send in response
         
